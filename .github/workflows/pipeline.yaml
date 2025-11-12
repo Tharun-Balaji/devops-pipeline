@@ -1,22 +1,49 @@
+# Trigger configuration: defines when this workflow should run
 on:
+  # This workflow triggers on push events (when code is pushed to the repository)
   push:
+    # Specifies that the workflow only runs when code is pushed to the 'main' branch
     branches: [main]
 
+# Jobs section: contains all the jobs that will be executed in this workflow
 jobs:
+  # Job name: 'build' - this is the identifier for this job
   build:
+    # Specifies the type of machine/runner that will execute this job
+    # ubuntu-latest: uses the latest version of Ubuntu Linux as the execution environment
     runs-on: ubuntu-latest
 
+    # Steps section: ordered list of tasks that will be executed sequentially in this job
     steps:
+      # Step 1: Checkout code
+      # name: Human-readable name for this step that appears in workflow logs
       - name: Checkout code
+        # uses: specifies a pre-built GitHub Action to use
+        # actions/checkout@v5: officially maintained action that checks out the repository code
+        # This allows the workflow to access and work with the source code
         uses: actions/checkout@v5
 
+      # Step 2: Set up Node.js runtime environment
+      # This step installs Node.js and npm in the runner environment
       - name: Set up Node.js
+        # actions/setup-node@v3: GitHub's official action for setting up Node.js
         uses: actions/setup-node@v3
+        # with: provides configuration options for the action
         with:
+          # node-version: specifies which version of Node.js to install
+          # "16": installs Node.js version 16 for running JavaScript code
           node-version: "16"
 
+      # Step 3: Install project dependencies
+      # This step installs all npm packages listed in package.json
       - name: Install dependencies
+        # run: executes a shell command directly (not a GitHub Action)
+        # npm install: downloads and installs all dependencies specified in package.json
         run: npm install
 
+      # Step 4: Run automated tests
+      # This step executes the test suite to verify the application works correctly
       - name: Test Application
+        # run: executes a shell command
+        # npm test: runs the test script defined in package.json to validate the code
         run: npm test
